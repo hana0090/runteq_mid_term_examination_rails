@@ -1,10 +1,17 @@
 class PostsController < ApplicationController
   before_action :require_login, only: %i[new create]
+  before_action :set_search
 
   def index
     @posts = Post.order(created_at: :desc).page(params[:page]).per(10)
   end
 
+  def search
+    @q = Post.ransack(search_params)
+    @posts = @q.result(distinct: true).includes(:user).order(created_at: :desc).page(params[:page])
+    render :index
+  end
+  
   def new
     @post = Post.new
   end
@@ -26,6 +33,7 @@ class PostsController < ApplicationController
 
   def edit
     @post = current_user.posts.find(params[:id])
+    @tag_names = @post.tag_names # タグの名前を取得
   end
 
   def update
@@ -44,9 +52,17 @@ class PostsController < ApplicationController
     redirect_to posts_path, success: 'ポストを削除しました'
   end
 
+  def set_search
+    @q = Post.ransack(params[:q])
+  end
+  
   private
 
+  def search_params
+    params.require(:q).permit!
+  end
+
   def post_params
-    params.require(:post).permit(:title, :body)
+    params.require(:post).permit(:title, :body, :tag_names)
   end
 end

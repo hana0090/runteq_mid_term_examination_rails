@@ -18,5 +18,12 @@
       <%= l post.created_at, format: :long %>
     </div>
   </div>
+
+  <div class="tags">
+  <% post.tags.each do |tag| %>
+    <a href="<%= posts_path(tag: tag.name) %>"><span class="badge rounded-pill bg-primary"><%= tag.name %></span></a>
+  <% end %>
+  </div>
+
   <hr>
 </li>

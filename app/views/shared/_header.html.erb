@@ -5,11 +5,14 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <form class="d-flex">
-        <input class="form-control me-2" type="search" placeholder="投稿">
-        <input class="form-control me-2" type="search" placeholder="コメント">
-        <input class="form-control me-2" type="search" placeholder="ユーザー">
-        <button class="btn btn-outline-success" type="submit">Search</button>
+      <%= search_form_for @q, url: search_path do |f| %>
+        <div class="d-flex">
+          <%= f.search_field :title_or_body_cont, class: 'form-control me-2', placeholder: '投稿', id: 'search_field_of_post' %>
+          <%= f.search_field :comments_body_cont, class: 'form-control me-2', placeholder: 'コメント', id: 'search_field_of_comment' %>
+          <%= f.search_field :user_profile_name_cont_any, class: 'form-control me-2', placeholder: 'ユーザー', id: 'search_field_of_user' %>
+          <%= f.submit class: 'btn btn-outline-success', value: "Search" %>
+        </div>
+      <% end %> 
       </form>
       <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
         <% if current_user.present? %>
