@@ -3,7 +3,11 @@ class PostsController < ApplicationController
   before_action :set_search
 
   def index
-    @posts = Post.order(created_at: :desc).page(params[:page]).per(10)
+    @posts = if (tag_name = params[:tag])
+               Post.with_tag(tag_name).order(created_at: :desc).page(params[:page]).per(10)
+             else
+               Post.order(created_at: :desc).page(params[:page]).per(10)
+             end
   end
 
   def search
@@ -11,7 +15,7 @@ class PostsController < ApplicationController
     @posts = @q.result(distinct: true).includes(:user).order(created_at: :desc).page(params[:page])
     render :index
   end
-  
+
   def new
     @post = Post.new
   end
@@ -55,7 +59,7 @@ class PostsController < ApplicationController
   def set_search
     @q = Post.ransack(params[:q])
   end
-  
+
   private
 
   def search_params

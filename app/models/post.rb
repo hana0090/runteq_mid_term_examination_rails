@@ -7,7 +7,9 @@ class Post < ApplicationRecord
   validates :title, presence: true
   validates :body, presence: true
 
-  
+  # タグ名に基づいて投稿を絞り込むスコープ
+  scope :with_tag, ->(tag_name) { joins(:tags).where(tags: { name: tag_name }) }
+
   # タグを設定するためのカスタムメソッド
   def tag_names=(names)
     tag_names_array = names.split(',').map(&:strip).uniq
@@ -18,6 +20,4 @@ class Post < ApplicationRecord
   def tag_names
     tags.map(&:name).join(',')
   end
-  
 end
-
