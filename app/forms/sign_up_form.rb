@@ -13,6 +13,7 @@ class SignUpForm
   end
 
   validate :email_is_not_taken_by_another
+  validate :validate_github_name # Include GitHub nickname validation
 
   def save
     return false if invalid?
@@ -33,5 +34,16 @@ class SignUpForm
 
   def email_is_not_taken_by_another
     errors.add(:email, :taken, value: email) if User.exists?(email: email)
+  end
+
+  def validate_github_name
+    if name.present?
+      url = URI.parse("https://github.com/#{name}")
+      response = Net::HTTP.get_response(url)
+
+      errors.add(:name, "GitHubに存在するユーザー名しか登録できません") unless response.is_a?(Net::HTTPSuccess)
+    end
+  rescue StandardError
+    errors.add(:name, "GitHubのユーザー名の存在を確認できませんでした")
   end
 end

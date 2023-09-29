@@ -1,7 +1,12 @@
 class ApplicationController < ActionController::Base
   add_flash_types :success, :info, :warning, :danger
+  before_action :set_search
 
   helper_method :current_user
+
+  def set_search
+    @q = Post.ransack(params[:q])
+  end
 
   private
 

@@ -17,6 +17,10 @@ class SessionsController < ApplicationController
     redirect_to login_path, success: 'ログアウトしました'
   end
 
+  def set_search
+    @q = Post.ransack(params[:q])
+  end
+
   private
 
   def session_params
