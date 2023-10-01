@@ -37,17 +37,12 @@ class SignUpForm
   end
 
   def validate_github_name
-    if name.present?
-      url = URI.parse("https://github.com/#{name}")
-      response = Net::HTTP.get_response(url)
   
-      unless response.is_a?(Net::HTTPSuccess)
-        errors.add(:base, "GitHubに存在するユーザー名しか登録できません")
-      end
-    else
-      errors.add(:base, "ニックネームを入力してください")
+    url = URI.parse("https://github.com/#{name}")
+    response = Net::HTTP.get_response(url)
+  
+    unless response.is_a?(Net::HTTPSuccess)
+      errors.add(:base, "GitHubに存在するユーザー名しか登録できません")
     end
-  rescue StandardError
-    errors.add(:base, "GitHubのユーザー名の存在を確認できませんでした")
   end
 end
