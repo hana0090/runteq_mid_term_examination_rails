@@ -8,6 +8,10 @@
     <%= f.label :body %>
     <%= f.text_area :body, class: 'form-control', rows: 5 %>
   </div>
+  <div class="mb-3">
+  <%= f.label :tag_names, 'タグ' %>
+  <%= f.text_field :tag_names, value: @tag_names, class: 'form-control' %>
+  </div>
 
   <%= f.submit class: 'btn btn-primary'  %>
 <% end %>
